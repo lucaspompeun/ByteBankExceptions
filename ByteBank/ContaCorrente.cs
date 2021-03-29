@@ -1,5 +1,7 @@
 ﻿// using _05_ByteBank;
 
+using System;
+
 namespace ByteBank
 {
     public class ContaCorrente
@@ -17,7 +19,7 @@ namespace ByteBank
             {
                 return _agencia;
             }
-            set
+            private set
             {
                 if (value <= 0)
                 {
@@ -27,30 +29,26 @@ namespace ByteBank
                 _agencia = value;
             }
         }
-        public int Numero { get; set; }
+
+        public int Numero { get; }
 
         private double _saldo = 100;
 
-        public double Saldo
-        {
-            get
-            {
-                return _saldo;
-            }
-            set
-            {
-                if (value < 0)
-                {
-                    return;
-                }
-
-                _saldo = value;
-            }
-        }
+        public double Saldo { get; }
 
 
         public ContaCorrente(int agencia, int numero)
         {
+            if (agencia <= 0)
+            {
+                throw new ArgumentException("Agencia não pode ser zero", nameof(agencia));
+            }
+
+            if (numero <= 0)
+            {
+                throw new ArgumentException("Numero não pode ser zero", nameof(numero));
+            }
+
             Agencia = agencia;
             Numero = numero;
 
