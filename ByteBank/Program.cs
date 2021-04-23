@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -12,36 +13,66 @@ namespace ByteBank
         {
             try
             {
-                ContaCorrente conta = new ContaCorrente(7348, 232);
-                ContaCorrente conta2 = new ContaCorrente(732, 87438);
-
-                conta2.Transferir(-10, conta);
-
-                conta.Depositar(50);
-                Console.WriteLine(conta.Saldo);
-                conta.Sacar(-500);
-                Console.WriteLine(conta.Saldo);
+                CarregarContas();
             }
-            catch (ArgumentException ex)
+            catch (Exception)
             {
-                Console.WriteLine($"Argumento com problema: {ex.ParamName}");
-                Console.WriteLine("Ocorreu uma exceção do tipo de ArgumentException");
-                Console.WriteLine(ex.Message);
+                Console.WriteLine("Catch no MAIN");
             }
-            catch (SaldoInsuficienteException ex)
-            {
-                Console.WriteLine(ex.Message);
-                Console.WriteLine("Exceção do tipo SaldoInsuficienteException");
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine(ex.Message);
-            }
-
-            Metodo();
 
             Console.ReadLine();
         }
+
+        private static void CarregarContas()
+        {
+            using (LeitorDeArquivo leitor = new LeitorDeArquivo("teste.txt"))
+            {
+                leitor.LerProximaLinha();
+            }
+
+            // ---------------
+
+            //LeitorDeArquivo leitor = null;
+
+            //try
+            //{
+            //    leitor = new LeitorDeArquivo("contas.txt");
+
+            //    leitor.LerProximaLinha();
+            //    leitor.LerProximaLinha();
+            //    leitor.LerProximaLinha();
+            //}
+            //finally
+            //{
+            //    Console.WriteLine("Executando finally");
+
+            //    if (leitor != null)
+            //    {
+            //        leitor.Fechar();
+            //    }
+            //}
+        }
+
+        private static void TestaInnerException()
+        {
+            try
+            {
+                ContaCorrente conta1 = new ContaCorrente(727382, 43473);
+                ContaCorrente conta2 = new ContaCorrente(3627, 6327);
+
+                conta1.Sacar(10000);
+            }
+            catch (OperacaoFinanceiraException e)
+            {
+                Console.WriteLine(e.Message);
+                Console.WriteLine(e.StackTrace);
+
+                Console.WriteLine("Informações inner exception:");
+
+                Console.WriteLine(e.InnerException);
+            }
+        }
+
         //Teste com a cadeia de chamada:
         //Metodo -> TestaDivisao -> Dividir
         private static void Metodo()
